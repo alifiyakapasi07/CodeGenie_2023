@@ -1,27 +1,27 @@
-def find_eligible_students(students, marks_obtained, total_marks, exam_results, percentile):
+def find_eligible_students( student_names, marks_obtained, total_marks, exam_results, required_percentile):
+   
+    # Combine student data into a list of tuples
+    student_data = list(zip(student_names, marks_obtained, exam_results))
     
-    # Calculate the scores of each student as a percentage
-    scores = [marks / total_marks * 100 for marks in marks_obtained]
+    # Sort students by marks obtained in descending order
+    student_data.sort(key=lambda x: x[1], reverse=True)
     
-    # Combine the student data into a list of tuples
-    student_data = list(zip(students, scores, exam_results))
+    # Compute rank and percentile score for each student
+    total_students = len(student_data)
+   
+    for i, student in enumerate(student_data):  #iterate over a sequence
+        rank = i + 1                            #rank of the current student is calculated by adding 1 to their index
+        
+        percentile = (total_students - rank) / total_students * 100     
+        student_data[i] = (student[0], student[1], student[2], percentile)      #student[0]==student_names , student[1]==marks_obtained, student[2]==exam_results
     
-    # Sort the student data by their scores in descending order
-    student_data.sort(key=lambda x: x[1], reverse=True)         # lamba x:x[1]==use the second element of each tuple as the key for sorting
+    # Filter out failed students and those with percentile below required
+    eligible_students = [student[0] for student in student_data if student[2] == "Passed" and student[3] >= required_percentile]
     
-    # Calculate the cutoff score based on the percentile criteria
-    cutoff_index = int(len(student_data) * (percentile / 100.0))
-    cutoff_score = student_data[cutoff_index - 1][1]
+    # Sort eligible students by percentile score in descending order
+    eligible_students.sort(key=lambda x: student_data[student_names.index(x)][3], reverse=True)  
     
-    # Filter the eligible students based on their scores and exam results
-    
-    #for each student tuple in the sublist of student_data up to the cutoff_index, if the student's score is greater than or equal to the score of the 
-    #student at the cutoff index and the student passed the exam, include their name in a new list of eligible students
-    eligible_students = [student[0] for student in student_data[:cutoff_index] if student[1] >= cutoff_score and student[2] == "Passed"]
-    
-    # Return the list of eligible students
     return eligible_students
-
 # Example usage
 students = ["Kartik" ,"Devang", "Pari", "Ketan", "Sheetal", "Darshana", "Mohan"]
 marks_obtained = [800, 300, 750, 760, 680, 790, 640]
