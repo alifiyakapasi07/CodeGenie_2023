@@ -12,13 +12,13 @@ class GuessTheNumber:
 
             op = s[2]           #if s is the string "X * 5", then op would be assigned the character "*".
 
-            # Exception Cases
+            # Some Exception Cases
             if op == '/' and num == 0:
                 return -1
             if (op == '*' and num == 0) or (op == '^' and num == 0) or op == '%':
                 return -2
 
-            # Apply Operation
+            # Operation applied
             if op == '+':
                 ans -= num
             elif op == '*':
