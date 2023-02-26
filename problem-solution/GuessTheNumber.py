@@ -1,30 +1,41 @@
-def find_original_number(final_number, operations):
-  
-    # Initialize the original number as the final number
-    original_number = final_number
+class GuessTheNumber:
     
-    for operation in operations:
-        operator, value = operation.split(" ")[1:]
-        value = int(value)
-        if operator == "+":
-            original_number += value
-        elif operator == "-":
-            original_number -= value
-        elif operator == "*":
-            original_number *= value
-        elif operator == "/":
-            original_number /= value
-        elif operator == "^":
-            original_number **= (1/value)
-        elif operator == "%":
-            original_number = original_number * value + (original_number // value)
-    
-    return int(original_number)
-  
-# Example usage
+    def get_actual_number(final_number, operations):
+        ans = final_number
 
-final_number = 2500
-operations = ["X + 10", "X - 5", "X * 5", "X ^ 2"]
+        for i in range(len(operations)-1, -1, -1):  # list in reverse order, from the last element to the first element (-1,-1)
 
-original_number = find_original_number(final_number, operations)
-print("Original number:", original_number)
+            s = operations[i]   #sets the variable s to the string value of the current operation.
+            
+            num = int(s[4:])    #represents the second operand of the multiplication operation in "X * 5"
+                                #The int() function is then used to convert this string "5" to the integer value 5
+
+            op = s[2]           #if s is the string "X * 5", then op would be assigned the character "*".
+
+            # Exception Cases
+            if op == '/' and num == 0:
+                return -1
+            if (op == '*' and num == 0) or (op == '^' and num == 0) or op == '%':
+                return -2
+
+            # Apply Operation
+            if op == '+':
+                ans -= num
+            elif op == '*':
+                ans /= num
+            elif op == '-':
+                ans += num
+            elif op == '/':
+                ans *= num
+            else:
+                ans = int(ans ** (1 / num))
+
+        return ans
+
+
+if __name__ == '__main__':
+    final_number = 2500
+    operations = ["X + 10", "X - 5", "X * 5", "X ^ 2"]
+
+    actual_number = GuessTheNumber.get_actual_number(final_number, operations)
+    print( actual_number)
